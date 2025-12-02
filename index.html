@@ -221,10 +221,27 @@
     </div>
 
     <script>
+        const birthDateInput = document.getElementById('birthDate');
+        const STORAGE_KEY = 'dogBirthDate';
+        
+        // 頁面載入時從 localStorage 讀取保存的日期
+        window.addEventListener('DOMContentLoaded', function() {
+            const savedDate = localStorage.getItem(STORAGE_KEY);
+            if (savedDate) {
+                birthDateInput.value = savedDate;
+            }
+        });
+        
+        // 當用戶選擇日期時，立即保存到 localStorage
+        birthDateInput.addEventListener('change', function() {
+            if (birthDateInput.value) {
+                localStorage.setItem(STORAGE_KEY, birthDateInput.value);
+            }
+        });
+        
         document.getElementById('ageForm').addEventListener('submit', function(e) {
             e.preventDefault();
             
-            const birthDateInput = document.getElementById('birthDate');
             const errorMessage = document.getElementById('errorMessage');
             const result = document.getElementById('result');
             
@@ -233,6 +250,11 @@
             
             const birthDate = new Date(birthDateInput.value);
             const today = new Date();
+            
+            // 保存日期到 localStorage
+            if (birthDateInput.value) {
+                localStorage.setItem(STORAGE_KEY, birthDateInput.value);
+            }
             
             // 驗證日期
             if (!birthDateInput.value) {
