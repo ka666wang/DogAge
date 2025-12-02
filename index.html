@@ -1,0 +1,316 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>狗狗年齡計算器</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Microsoft JhengHei', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .container {
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            padding: 40px;
+            max-width: 500px;
+            width: 100%;
+            animation: fadeIn 0.5s ease-in;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(-20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        h1 {
+            color: #333;
+            text-align: center;
+            margin-bottom: 10px;
+            font-size: 2em;
+        }
+
+        .subtitle {
+            text-align: center;
+            color: #666;
+            margin-bottom: 30px;
+            font-size: 0.9em;
+        }
+
+        .form-group {
+            margin-bottom: 25px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            color: #555;
+            font-weight: 500;
+            font-size: 0.95em;
+        }
+
+        input[type="date"] {
+            width: 100%;
+            padding: 12px 15px;
+            border: 2px solid #e0e0e0;
+            border-radius: 10px;
+            font-size: 1em;
+            transition: all 0.3s ease;
+            outline: none;
+        }
+
+        input[type="date"]:focus {
+            border-color: #667eea;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+
+        .btn {
+            width: 100%;
+            padding: 14px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            border-radius: 10px;
+            font-size: 1.1em;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-top: 10px;
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(102, 126, 234, 0.3);
+        }
+
+        .btn:active {
+            transform: translateY(0);
+        }
+
+        .result {
+            margin-top: 30px;
+            padding: 25px;
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            border-radius: 15px;
+            display: none;
+            animation: slideIn 0.5s ease-out;
+        }
+
+        .result.show {
+            display: block;
+        }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .result-title {
+            font-size: 1.2em;
+            color: #333;
+            margin-bottom: 15px;
+            text-align: center;
+            font-weight: 600;
+        }
+
+        .result-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 12px 0;
+            border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+        }
+
+        .result-item:last-child {
+            border-bottom: none;
+        }
+
+        .result-label {
+            color: #666;
+            font-weight: 500;
+        }
+
+        .result-value {
+            color: #667eea;
+            font-weight: 700;
+            font-size: 1.1em;
+        }
+
+        .emoji {
+            font-size: 1.2em;
+            margin-right: 5px;
+        }
+
+        .error {
+            color: #e74c3c;
+            margin-top: 10px;
+            font-size: 0.9em;
+            display: none;
+        }
+
+        .error.show {
+            display: block;
+        }
+
+        .dog-image {
+            width: 100%;
+            height: auto;
+            border-radius: 15px;
+            margin: 0 auto 30px;
+            display: block;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            object-fit: cover;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🐕 狗狗年齡計算器</h1>
+        <p class="subtitle">輸入您家狗狗的出生日期，計算牠的年齡</p>
+        
+        <form id="ageForm">
+            <img src="images.jpeg" alt="可愛的狗狗" class="dog-image">
+            <div class="form-group">
+                <label for="birthDate">出生年月日</label>
+                <input type="date" id="birthDate" name="birthDate" required>
+                <div class="error" id="errorMessage"></div>
+            </div>
+            
+            <button type="submit" class="btn">計算年齡</button>
+        </form>
+        
+        <div class="result" id="result">
+            <div class="result-title">📊 計算結果</div>
+            <div class="result-item">
+                <span class="result-label"><span class="emoji">📅</span>實際年齡</span>
+                <span class="result-value" id="actualAge"></span>
+            </div>
+            <div class="result-item">
+                <span class="result-label"><span class="emoji">🐶</span>相當於人類年齡</span>
+                <span class="result-value" id="humanAge"></span>
+            </div>
+            <div class="result-item">
+                <span class="result-label"><span class="emoji">🎂</span>出生日期</span>
+                <span class="result-value" id="birthDateDisplay"></span>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.getElementById('ageForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const birthDateInput = document.getElementById('birthDate');
+            const errorMessage = document.getElementById('errorMessage');
+            const result = document.getElementById('result');
+            
+            // 清除之前的錯誤訊息
+            errorMessage.classList.remove('show');
+            
+            const birthDate = new Date(birthDateInput.value);
+            const today = new Date();
+            
+            // 驗證日期
+            if (!birthDateInput.value) {
+                errorMessage.textContent = '請選擇出生日期';
+                errorMessage.classList.add('show');
+                return;
+            }
+            
+            if (birthDate > today) {
+                errorMessage.textContent = '出生日期不能是未來日期';
+                errorMessage.classList.add('show');
+                return;
+            }
+            
+            // 計算實際年齡（年、月、日）
+            let years = today.getFullYear() - birthDate.getFullYear();
+            let months = today.getMonth() - birthDate.getMonth();
+            let days = today.getDate() - birthDate.getDate();
+            
+            if (days < 0) {
+                months--;
+                const lastMonth = new Date(today.getFullYear(), today.getMonth(), 0);
+                days += lastMonth.getDate();
+            }
+            
+            if (months < 0) {
+                years--;
+                months += 12;
+            }
+            
+            // 計算總天數
+            const diffTime = Math.abs(today - birthDate);
+            const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+            
+            // 計算相當於人類年齡（使用更準確的公式）
+            let humanAge = 0;
+            const dogYears = years + (months / 12);
+            
+            if (dogYears <= 1) {
+                // 第一年：15 狗年
+                humanAge = dogYears * 15;
+            } else if (dogYears <= 2) {
+                // 第二年：9 狗年
+                humanAge = 15 + (dogYears - 1) * 9;
+            } else {
+                // 之後每年：5 狗年
+                humanAge = 15 + 9 + (dogYears - 2) * 5;
+            }
+            
+            // 顯示結果
+            let ageText = '';
+            if (years > 0) {
+                ageText = `${years} 歲`;
+                if (months > 0) {
+                    ageText += ` ${months} 個月`;
+                }
+            } else if (months > 0) {
+                ageText = `${months} 個月`;
+                if (days > 0) {
+                    ageText += ` ${days} 天`;
+                }
+            } else {
+                ageText = `${days} 天`;
+            }
+            
+            document.getElementById('actualAge').textContent = ageText;
+            document.getElementById('humanAge').textContent = Math.round(humanAge) + ' 歲';
+            
+            // 格式化日期顯示
+            const dateStr = birthDate.toLocaleDateString('zh-TW', {
+                year: 'numeric',
+                month: 'long',
+                day: 'numeric'
+            });
+            document.getElementById('birthDateDisplay').textContent = dateStr;
+            
+            result.classList.add('show');
+        });
+    </script>
+</body>
+</html>
